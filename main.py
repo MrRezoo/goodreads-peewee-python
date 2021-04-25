@@ -86,7 +86,7 @@ def show_all_book_shelf_optimize():
     for q in query:
         print(q.rate)  # no hit
         print(q.user.username)  # not hit
-        print(q.shelf.name)  # hit 3
+        print(q.shelf.name)  # not hit
         print(q.book.name)  # no hit
         print('#' * 20)
 
