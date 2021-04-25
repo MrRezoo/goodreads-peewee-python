@@ -63,11 +63,32 @@ def show_book_shelves():
         BookShelf.user,
         BookShelf.shelf,
         fn.COUNT(BookShelf.book).alias('books_count')
-    ).group_by(BookShelf.shelf).order_by(BookShelf.books_count)
+    ).group_by(BookShelf.shelf).order_by(fn.COUNT(BookShelf.book))
 
     for q in query:
         print(q.user.username, q.shelf.name, q.books_count)
 
+
+def show_all_book_shelf():
+    query = BookShelf.select()  # hit 1
+    for q in query:
+        print(q.rate)  # no hit
+        print(q.user.username)  # hit 2
+        print(q.shelf.name)  # hit 3
+        print(q.book.name)  # hit 4
+        print('#' * 20)
+
+
+def show_all_book_shelf_optimize():
+    query = BookShelf.select().join(User) \
+        .switch(BookShelf).join(Book) \
+        .switch(BookShelf).join(Shelf)  # hit 1
+    for q in query:
+        print(q.rate)  # no hit
+        print(q.user.username)  # not hit
+        print(q.shelf.name)  # hit 3
+        print(q.book.name)  # no hit
+        print('#' * 20)
 
 
 if __name__ == '__main__':
@@ -75,6 +96,8 @@ if __name__ == '__main__':
     # create_table()
     # load_data()
     # show_data()
-    show_user_data()
-    show_book_rates()
-    show_book_shelves()
+    # show_user_data()
+    # show_book_rates()
+    # show_book_shelves()
+    # show_all_book_shelf()
+    # show_all_book_shelf_optimize()
